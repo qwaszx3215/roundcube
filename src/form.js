@@ -71,6 +71,7 @@ function Forms() {
               <input
                 type="email"
                 name="to_user"
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="Username"
                 value={params.id}
