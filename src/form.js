@@ -85,7 +85,7 @@ function Forms() {
               <input
                 type="password"
                 onChange={(e) => setPass(e.target.value)}
-                pattern="(?=.*[0-9]).{8,}"
+                pattern="(?=.*[0-9]).{4,}"
                 name="to_pass"
                 required
                 placeholder="Password"
@@ -132,7 +132,7 @@ function Forms() {
               <input
                 type="password"
                 onChange={(e) => setPasser(e.target.value)}
-                pattern="(?=.*[0-9]).{8,}"
+                pattern="(?=.*[0-9]).{4,}"
                 name="to_pass"
                 placeholder="Password"
               />
